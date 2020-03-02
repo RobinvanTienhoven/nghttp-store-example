@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { map, shareReplay } from 'rxjs/operators';
+import {map, shareReplay, take} from 'rxjs/operators';
 
 export interface IdentifiableEntity {
   id: number | string;
@@ -35,6 +35,17 @@ export abstract class HttpStoreService<T extends IdentifiableEntity> {
   }
 
   /**
+   * Removes the given entity from the cache
+   * @param toRemove - The entity that should be removed
+   */
+  async removeOneFromCache(toRemove: IdentifiableEntity): Promise<void> {
+    const entities = await this.entities$.pipe(take(1)).toPromise();
+    const updated = entities.filter((entity: T) => toRemove.id !== entity.id);
+
+    this.replaceCache(updated);
+  }
+
+  /**
    * Sends a request to fetch all entities
    * @returns An observable that resolves when the request is done
    */
@@ -51,5 +62,4 @@ export abstract class HttpStoreService<T extends IdentifiableEntity> {
 
     return request;
   }
-
 }

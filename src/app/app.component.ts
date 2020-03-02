@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TodoService, Todo} from './service/todo.service';
 import {Observable} from 'rxjs';
-import {LogService} from './service/log.service';
 
 @Component({
   selector: 'app-root',
@@ -12,12 +11,15 @@ export class AppComponent implements OnInit {
 
   todos: Observable<Todo[]>;
 
-  constructor(private todoService: TodoService,
-              logService: LogService) {
-  }
+  constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
     this.todos = this.todoService.entities$;
     this.todoService.getAll('https://jsonplaceholder.typicode.com/todos');
   }
+
+  remove(todo: Todo): void {
+    this.todoService.removeOneFromCache(todo);
+  }
+
 }
