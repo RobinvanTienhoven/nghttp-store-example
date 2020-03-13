@@ -1,16 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {TodoService} from './service/todo.service';
+import {TodoService, Todo} from './service/todo.service';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-amount-of-todos',
-  template: `<div>Amount of todo's: {{ amount }}</div>`
+  template: `<div>Amount of todo's: {{ (amount | async).length }}</div>`
 })
 export class AmountComponent implements OnInit {
-  amount = 0;
+  amount: Observable<Todo[]>;
 
   constructor(private todoService: TodoService) {}
 
   ngOnInit(): void {
-    this.todoService.entities$.subscribe((todos) => this.amount = todos.length);
+    this.amount = this.todoService.entities$;
   }
 }
