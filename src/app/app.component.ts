@@ -21,5 +21,4 @@ export class AppComponent implements OnInit {
   remove(todo: Todo): void {
     this.todoService.removeOneFromCache(todo);
   }
-
 }
